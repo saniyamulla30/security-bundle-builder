@@ -1,16 +1,49 @@
-# React + Vite
+# Wyze Security Bundle Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, responsive, pixel-perfect e-commerce bundle builder built with React, Vite, and Tailwind CSS, developed to replicate the provided Figma specifications.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Live Demo
 
-## React Compiler
+- **Live URL**: [Add your live deployment link here once deployed]
+- **Repository**: [https://github.com/saniyamulla30/security-bundle-builder](https://github.com/saniyamulla30/security-bundle-builder)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features & Functional Highlights
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **4-Step Accordion Flow**: Dynamic progression through Cameras, Plans, Sensors, and Extra Protection with state tracking across steps.
+- **Dynamic Cart State Management**: Powered by React Context API (`BuilderContext`) managing variant selection, item quantities, category groupings, and real-time pricing calculations.
+- **Dynamic Pricing & Discounts**:
+  - Auto-calculated subtotal, strikethrough comparison prices, and total bundle savings.
+  - Automatic complimentary items ("FREE" badge logic with strikethrough pricing for required hubs and shipping).
+- **Pixel-Perfect Figma Parity**:
+  - Matched card dimensions, borders, and light-blue tinted backgrounds (`#F4F8FF`) on active sections and the Review Panel.
+  - Adaptive "Learn More" positioning (inline for multi-line copy, dedicated line for short descriptions).
+  - Multi-variant selector pills (e.g., White, Grey, Black) with reactive thumbnail updates.
+- **Sticky Review Panel**: Desktop-docked breakdown displaying category-sorted line items, individual steppers, satisfaction guarantee badge, and reactive checkout summary.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: React 18 / 19 (Vite template)
+- **Styling**: Tailwind CSS
+- **State Management**: React Context & Hooks (`useState`, `useContext`, `useEffect`)
+- **Icons & Assets**: Custom SVG assets matching Figma specs
+
+---
+
+## 📦 Getting Started
+
+### Prerequisites
+
+Ensure you have [Node.js](https://nodejs.org/) installed (v18 or higher recommended).
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/saniyamulla30/security-bundle-builder.git](https://github.com/saniyamulla30/security-bundle-builder.git)
+   cd security-bundle-builder

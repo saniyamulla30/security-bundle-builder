@@ -141,7 +141,7 @@ function AccordionBuilder() {
                 {/* 3. Products Container (Tight flex wrap keeping 265px cards neatly placed) */}
                 {isOpen && (
                   <div className="pt-2">
-                    <div className="flex flex-wrap justify-center gap-2.5">
+                    <div className="flex flex-wrap justify-center gap-2.5 max-w-[550px] mx-auto">
                       {stepProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                       ))}
