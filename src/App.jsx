@@ -65,7 +65,7 @@ function AccordionBuilder() {
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[960px] mx-auto flex flex-col lg:flex-row gap-6 items-start justify-center">
         {/* Left Side: Accordion Steps Container */}
-        <div className="w-full lg:w-[570px] shrink-0 space-y-4">
+        <div className="w-full lg:w-[600px] shrink-0 space-y-4">
           {stepsConfig.map((step) => {
             const isOpen = activeStep === step.id;
             const selectedCount = getStepSelectedCount(step.id);
@@ -141,7 +141,7 @@ function AccordionBuilder() {
                 {/* 3. Products Container (Tight flex wrap keeping 265px cards neatly placed) */}
                 {isOpen && (
                   <div className="pt-2">
-                    <div className="flex flex-wrap justify-center gap-3">
+                    <div className="flex flex-wrap justify-center gap-2.5">
                       {stepProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                       ))}
