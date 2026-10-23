@@ -6,7 +6,7 @@ An interactive, responsive, pixel-perfect e-commerce bundle builder built with R
 
 ## 🚀 Live Demo
 
-- **Live URL**: [Add your live deployment link here once deployed]
+- **Live URL**: [https://saniya-rouge.vercel.app/](https://saniya-rouge.vercel.app/)
 - **Repository**: [https://github.com/saniyamulla30/security-bundle-builder](https://github.com/saniyamulla30/security-bundle-builder)
 
 ---
