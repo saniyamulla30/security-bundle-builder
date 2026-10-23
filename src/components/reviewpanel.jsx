@@ -5,41 +5,37 @@ import QuantityStepper from "./QuantityStepper";
 export default function ReviewPanel() {
   const { cart, updateQuantity } = useBuilder();
 
-  // Extract active items and preserve their cartKey
-  const cartItems = Object.entries(cart || {})
-    .filter(([_, item]) => item && item.quantity > 0)
-    .map(([key, item]) => ({ ...item, cartKey: key }));
+  const cartItems = Object.values(cart).filter((item) => item.quantity > 0);
 
-  // Fixed display order to mirror Figma Frame 1735
+  // Group items by category in the specified order
   const categories = ["CAMERAS", "SENSORS", "ACCESSORIES", "PLAN"];
 
-  // Pricing calculations
+  // Calculations
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + (item.price || 0) * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
   const compareTotal = cartItems.reduce(
     (sum, item) =>
-      sum +
-      (item.compareAtPrice !== undefined
-        ? item.compareAtPrice
-        : item.price || 0) *
-        item.quantity,
+      sum + (item.compareAtPrice || item.price) * item.quantity,
     0
   );
 
   const totalSavings = compareTotal - totalPrice;
   const hasSavings = totalSavings > 0.01;
 
+  // Monthly financing calculation (e.g. 12 months)
+  const monthlyEstimate = (totalPrice / 12).toFixed(2);
+
   return (
-    <aside className="bg-[#F4F8FF] border border-blue-100/80 rounded-2xl p-5 shadow-xs sticky top-6">
+    <aside className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm sticky top-6">
       {/* Header */}
-      <div>
+      <div className="border-b border-gray-100 pb-4">
         <span className="text-[10px] font-bold tracking-wider text-gray-400 uppercase">
           REVIEW
         </span>
-        <h2 className="text-xl font-bold text-gray-900 mt-0.5 tracking-tight">
+        <h2 className="text-xl font-bold text-gray-900 mt-1">
           Your security system
         </h2>
         <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -47,8 +43,8 @@ export default function ReviewPanel() {
         </p>
       </div>
 
-      {/* Cart Items Grouped by Category with darker dividing lines */}
-      <div className="mt-3">
+      {/* Cart Items Grouped by Category */}
+      <div className="py-4 space-y-5 border-b border-gray-100">
         {categories.map((category) => {
           const itemsInCategory = cartItems.filter(
             (item) => item.category === category
@@ -57,35 +53,33 @@ export default function ReviewPanel() {
           if (itemsInCategory.length === 0) return null;
 
           return (
-            <div
-              key={category}
-              className="border-t border-gray-200 pt-3 pb-3 space-y-2.5"
-            >
-              {/* Category Header */}
-              <h4 className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+            <div key={category} className="space-y-3">
+              {/* Ultra-light, subtle category header */}
+              <h4 className="text-[10px] font-medium uppercase tracking-wider text-gray-300">
                 {category}
               </h4>
 
               <div className="space-y-3">
                 {itemsInCategory.map((item) => {
+                  const itemKey = `${item.productId}-${item.variantLabel || "default"}`;
                   const isPlan = item.category === "PLAN";
 
                   return (
                     <div
-                      key={item.cartKey}
-                      className="flex items-center justify-between gap-2.5 text-xs"
+                      key={itemKey}
+                      className="flex items-center justify-between gap-3 text-xs"
                     >
-                      {/* Product Thumbnail & Name */}
+                      {/* Product Thumbnail & Details */}
                       <div className="flex items-center gap-2.5 min-w-0">
                         {item.image && (
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-7 h-7 object-contain shrink-0"
+                            className="w-8 h-8 object-contain shrink-0"
                           />
                         )}
                         <div className="min-w-0">
-                          <p className="font-semibold text-gray-900 text-xs truncate">
+                          <p className="font-semibold text-gray-900 truncate">
                             {item.name}
                           </p>
                           {item.variantLabel && (
@@ -96,7 +90,7 @@ export default function ReviewPanel() {
                         </div>
                       </div>
 
-                      {/* Stepper & Line Item Pricing (All persistent in Blue) */}
+                      {/* Controls & Price */}
                       <div className="flex items-center gap-3 shrink-0">
                         {isPlan ? (
                           <span className="text-[11px] font-medium text-gray-500">
@@ -107,10 +101,10 @@ export default function ReviewPanel() {
                             variant="boxed"
                             quantity={item.quantity}
                             onIncrement={() =>
-                              updateQuantity(item.cartKey, 1, item)
+                              updateQuantity(itemKey, 1, item)
                             }
                             onDecrement={() =>
-                              updateQuantity(item.cartKey, -1, item)
+                              updateQuantity(itemKey, -1, item)
                             }
                           />
                         )}
@@ -119,7 +113,7 @@ export default function ReviewPanel() {
                           {item.isFree ? (
                             <div>
                               <span className="block text-[10px] text-gray-400 line-through">
-                                ${(item.compareAtPrice || 29.92).toFixed(2)}
+                                ${(item.compareAtPrice || 29.98).toFixed(2)}
                               </span>
                               <span className="font-bold text-[#2A5CE6] text-xs">
                                 FREE
@@ -133,10 +127,10 @@ export default function ReviewPanel() {
                                     ${(item.compareAtPrice * item.quantity).toFixed(2)}
                                   </span>
                                 )}
-                              <span className="text-xs font-bold leading-none text-[#2A5CE6]">
+                              <span className="font-semibold text-gray-900 text-xs">
                                 ${(item.price * item.quantity).toFixed(2)}
                                 {isPlan && (
-                                  <span className="text-[9px] text-gray-500 font-normal">
+                                  <span className="text-[9px] text-gray-400 font-normal">
                                     /mo
                                   </span>
                                 )}
@@ -154,14 +148,14 @@ export default function ReviewPanel() {
         })}
 
         {cartItems.length === 0 && (
-          <p className="text-xs text-gray-400 text-center py-4 border-t border-gray-200">
+          <p className="text-xs text-gray-400 text-center py-4">
             No items selected yet. Choose cameras to get started.
           </p>
         )}
       </div>
 
-      {/* Fast Shipping Row with darker top/bottom divider */}
-      <div className="flex items-center justify-between py-3 border-t border-b border-gray-200 text-xs">
+      {/* Fast Shipping Row */}
+      <div className="flex items-center justify-between py-3 border-b border-gray-100 text-xs">
         <div className="flex items-center gap-2 text-gray-700">
           <img
             src="/assets/icons/carbon_delivery.svg"
@@ -176,18 +170,20 @@ export default function ReviewPanel() {
         </div>
       </div>
 
-      {/* Guarantee Badge & Pricing Summary Row */}
+      {/* Bottom Guarantee Badge & Price Summary */}
       <div className="pt-4 space-y-4">
         <div className="flex items-end justify-between">
+          {/* Real Guarantee Badge Image */}
           <img
             src="/assets/icons/badge-guarantee.svg"
             alt="100% Wyze Satisfaction Guarantee"
             className="w-14 h-14 object-contain shrink-0 select-none -mb-1"
           />
 
+          {/* Pricing Stack */}
           <div className="text-right">
-            <span className="inline-block text-[10px] font-semibold text-white bg-[#5046E5] px-2 py-0.5 rounded mb-1">
-              as low as $19.19/mo
+            <span className="inline-block text-[10px] font-semibold text-[#2A5CE6] bg-blue-50 px-2 py-0.5 rounded mb-1">
+              as low as ${monthlyEstimate}/mo
             </span>
             <div className="flex items-baseline justify-end gap-1.5">
               {hasSavings && (
@@ -204,7 +200,7 @@ export default function ReviewPanel() {
 
         {/* Savings Ribbon */}
         {hasSavings && (
-          <div className="bg-emerald-100/70 text-emerald-800 text-center py-1.5 px-3 rounded-lg text-xs font-semibold">
+          <div className="bg-emerald-50 text-emerald-700 text-center py-1.5 px-3 rounded-lg text-xs font-medium">
             Congrats! You're saving ${totalSavings.toFixed(2)} on your security bundle!
           </div>
         )}
@@ -213,12 +209,12 @@ export default function ReviewPanel() {
         <button
           type="button"
           disabled={cartItems.length === 0}
-          className="w-full bg-[#5046E5] hover:bg-[#4338CA] active:bg-[#3730A3] text-white font-semibold py-3 px-4 rounded-xl text-sm transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full bg-[#2A5CE6] hover:bg-[#1E4DC9] active:bg-[#173EA6] text-white font-semibold py-3 px-4 rounded-xl text-sm transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           Checkout
         </button>
 
-        {/* Save for Later Link */}
+        {/* Save for later link */}
         <div className="text-center">
           <button
             type="button"
